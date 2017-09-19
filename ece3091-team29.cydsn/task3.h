@@ -9,11 +9,12 @@
  *
  * ========================================
 */
-#ifndef CYAPICALLBACKS_H
-#define CYAPICALLBACKS_H
-    
-    /*Define your macro callbacks here */
-    /*For more information, refer to the Macro Callbacks topic in the PSoC Creator Help.*/
-    
-#endif /* CYAPICALLBACKS_H */   
-/* [] */
+
+#include "project.h"
+#include "motor.h"
+#include "ultrasonic.h"
+#include "vl53l0x_functions.h"
+
+void run_task_3();
+
+/* [] END OF FILE */

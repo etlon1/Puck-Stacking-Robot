@@ -9,11 +9,19 @@
  *
  * ========================================
 */
-#ifndef CYAPICALLBACKS_H
-#define CYAPICALLBACKS_H
+
+#ifndef _ULTRASONIC_H_
+#define _ULTRASONIC_H_
+
+#include "project.h"
+#include <stdio.h>
     
-    /*Define your macro callbacks here */
-    /*For more information, refer to the Macro Callbacks topic in the PSoC Creator Help.*/
-    
-#endif /* CYAPICALLBACKS_H */   
-/* [] */
+void Ultrasonic_CalculateDistance();
+void Ultrasonic_ReadDistance();
+
+int Ultrasonic_EchoFree();
+
+#endif
+
+
+/* [] END OF FILE */
