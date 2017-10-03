@@ -13,15 +13,9 @@
 
 char string[100];
 
-float ultrasonicDistance = 0;  // Distance based on the time of flight
-
-void Ultrasonic_Start() {
-    Ultrasonic_Timer_Start();      // Initializes the timer for the ultrasonic
-    DieTemp_Start();
-}
+extern float ultrasonicDistance;  // Distance based on the time of flight
 
 void Ultrasonic_CalculateDistance() {
-    
     int16 airTemp;          // Assume air temperature is the same as the dire
     float timeOfFlight;     // Ultrasonic wave travel time
     float soundSpeed;       // Value of sound speed based on the air temperature
@@ -32,17 +26,20 @@ void Ultrasonic_CalculateDistance() {
     timeOfFlight = (float) (65535 - Ultrasonic_Timer_ReadCounter())/2000;     // Read the timer counter and calculate time
     ultrasonicDistance = soundSpeed*timeOfFlight;                    // Calculate the distance in mm
     
-//    sprintf(string, "%f\n", ultrasonicDistance);     // Convert and store to string
-//    UART_PutString(string);                         // Display the distance on the terminal
+    //sprintf(string, "%f\n", distanceTravelled);     // Convert and store to string
+    //UART_PutString(string);                         // Display the distance on the terminal
 }
 
-float Ultrasonic_ReadDistance(int sensorNumber) {
-    TrigReg_Write(sensorNumber);    // Set register to 1, triggering the ultrasonic and reseting the timer
-    CyDelayUs(10);                  // Trigger signal must be 10us
-    TrigReg_Write(0);               // Stop ultrasonic trigger signal
-    CyDelay(10);                    // Wait for the reading to finish
-    
-    return ultrasonicDistance;
+int Ultrasonic_EchoFree() {
+    return !(Echo_FrontRight_Read() || Echo_FrontLeft_Read() || Echo_BackRight_Read() || Echo_BackLeft_Read() || Echo_SideRight_Read() || Echo_SideLeft_Read());
+}
+
+void Ultrasonic_ReadDistance(int sensorNumber) { 
+    if( Ultrasonic_EchoFree() ) {
+        TrigReg_Write(sensorNumber);    // Set register to 1, triggering the ultrasonic and reseting the timer
+        CyDelayUs(10);                  // Trigger signal must be 10us
+        TrigReg_Write(0);               // Stop ultrasonic trigger signal  
+    }
 }
 
 /* [] END OF FILE */

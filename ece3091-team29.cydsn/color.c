@@ -28,17 +28,17 @@ int Color_GetColor() {
     int color = 0;
     
     while(1) {
-        LED_Red_Write(0);
-        red = Color_GetMultipleSamples();
-        LED_Red_Write(1);
+        LED_Front_Red_Write(0);
+        red = _Color_GetMultipleSamples();
+        LED_Front_Red_Write(1);
         
-        LED_Green_Write(0);
-        green = Color_GetMultipleSamples();
-        LED_Green_Write(1);
+        LED_Front_Green_Write(0);
+        green = _Color_GetMultipleSamples();
+        LED_Front_Green_Write(1);
         
-        LED_Blue_Write(0);
-        blue = Color_GetMultipleSamples();
-        LED_Blue_Write(1);
+        LED_Front_Blue_Write(0);
+        blue = _Color_GetMultipleSamples();
+        LED_Front_Blue_Write(1);
         
         char string[100];
         sprintf(string, "Color: Red %d, Green %d, Blue %d\n", red, green, blue);
@@ -61,7 +61,7 @@ int Color_GetColor() {
             }
         }
         
-        if(Color_IsSampleGood(red, green, blue, color)) {
+        if(_Color_IsSampleGood(red, green, blue, color)) {
             return color;
         }
     }
@@ -70,26 +70,26 @@ int Color_GetColor() {
 void Color_LED_TurnOn(int color) {
     
     if(color == 1) {
-        LED_Red_Write(0);
+        LED_Front_Red_Write(0);
     }
     else if(color == 2) {
-        LED_Green_Write(0);
+        LED_Front_Green_Write(0);
     }
     else if(color == 3) {
-        LED_Blue_Write(0);
+        LED_Front_Blue_Write(0);
     }
 }
 
 void Color_LED_TurnOff(int color) {
     
     if(color == 1) {
-        LED_Red_Write(1);
+        LED_Front_Red_Write(1);
     }
     else if(color == 2) {
-        LED_Green_Write(1);
+        LED_Front_Green_Write(1);
     }
     else if(color == 3) {
-        LED_Blue_Write(1);
+        LED_Front_Blue_Write(1);
     }
 }
 
@@ -105,21 +105,21 @@ void Color_LED_TurnOffAll() {
     Color_LED_TurnOff(3);
 }
 
-int Color_GetSample() {
+int _Color_GetSample() {
     ADC_StartConvert();
     ADC_IsEndConversion(ADC_WAIT_FOR_RESULT);
     return ADC_GetResult16();
 }
 
-int Color_GetMultipleSamples() {
+int _Color_GetMultipleSamples() {
     int result;
     int new_sample;
     int i;
     
-    result = Color_GetSample();
+    result = _Color_GetSample();
     
     for(i = 0; i < COLOR_SAMPLE_NUMB; i++) {
-        new_sample = Color_GetSample();
+        new_sample = _Color_GetSample();
         result = (result + new_sample)/2;
     }
     
@@ -127,7 +127,7 @@ int Color_GetMultipleSamples() {
     return result;
 }
 
-int Color_IsSampleGood(int red, int green, int blue, int color) {
+int _Color_IsSampleGood(int red, int green, int blue, int color) {
     
     if(color == 1) {
         if(COLOR_RESULT_FREEDOM*red >= green && COLOR_RESULT_FREEDOM*red >= blue) {

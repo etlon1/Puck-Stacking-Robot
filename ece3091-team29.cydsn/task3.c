@@ -11,24 +11,143 @@
 */
 #include "task3.h"
 
-char string[100];
-
 extern float ultrasonicDistance;
 
 void run_task_3() {
     UART_PutString("Running task 3\n");
     
-    int16 sample;
+    float stopDistance = 250;
     
-    while(1) {
-        sample = Color_GetSample();
-        
-        sprintf(string, "Sample: %d\n", sample);
-        UART_PutString(string);
-        
-        CyDelay(100);
+    Motor_PID_Reset();
+    Motor_MoveForward();
+    
+    ultrasonicDistance = 1000;
+    
+    while( ultrasonicDistance > 125 || QuadDec_Right_GetCounter() < 5000 ) {
+        Ultrasonic_ReadDistance(1);
     }
     
+    Motor_Stop();
+    CyDelay(100);
+    Motor_PID_Reset();
+    
+    Motor_TurnRight(90);
+    
+    Motor_Stop();
+    CyDelay(100);
+    Motor_PID_Reset();
+    
+    // Part 2
+    
+    Motor_MoveForward();
+    
+    ultrasonicDistance = 1000;
+    
+    while( ultrasonicDistance > stopDistance ) {
+        Ultrasonic_ReadDistance(1);
+    }
+    
+    Motor_Stop();
+    CyDelay(100);
+    Motor_PID_Reset();
+    
+    Motor_TurnLeft(90);
+    
+    Motor_Stop();
+    CyDelay(100);
+    Motor_PID_Reset();
+    
+    // Part 3
+    
+    Motor_MoveForward();
+    
+    ultrasonicDistance = 1000;
+    
+    while( ultrasonicDistance > stopDistance ) {
+         Ultrasonic_ReadDistance(1);
+    }
+    
+    Motor_Stop();
+    CyDelay(100);
+    Motor_PID_Reset();
+    
+    Motor_TurnLeft(90);
+    
+    Motor_Stop();
+    CyDelay(100);
+    Motor_PID_Reset();
+    
+    Motor_MoveForward();
+    
+    ultrasonicDistance = 1000;
+    
+    while( ultrasonicDistance > stopDistance ) {
+        
+         Ultrasonic_ReadDistance(1);
+    }
+    
+    Motor_Stop();
+    CyDelay(100);
+    Motor_PID_Reset();
+    
+    Motor_TurnLeft(90);
+    
+    Motor_Stop();
+    CyDelay(100);
+    Motor_PID_Reset();
+    
+    Motor_MoveForward();
+    
+    ultrasonicDistance = 1000;
+    
+    while( ultrasonicDistance > stopDistance ) {
+        
+         Ultrasonic_ReadDistance(1);
+    }
+    
+    Motor_Stop();
+    CyDelay(100);
+    Motor_PID_Reset();
+    
+    Motor_TurnLeft(90);
+    
+    Motor_Stop();
+    CyDelay(100);
+    Motor_PID_Reset();
+    
+    
+    //
+    
+    Motor_MoveForward();
+    
+    ultrasonicDistance = 1000;
+    
+    while( ultrasonicDistance > 565 ) {
+        
+         Ultrasonic_ReadDistance(1);
+    }
+    
+    Motor_Stop();
+    CyDelay(100);
+    Motor_PID_Reset();
+    
+    Motor_TurnRight(90);
+    
+    //
+    Motor_Stop();
+    CyDelay(100);
+    Motor_PID_Reset();
+    
+    Motor_MoveForward();
+    
+    ultrasonicDistance = 1000;
+    
+    while( ultrasonicDistance > 50 ) {
+        
+         Ultrasonic_ReadDistance(1);
+    }
+    
+    Motor_Stop();
 }
 
 /* [] END OF FILE */
