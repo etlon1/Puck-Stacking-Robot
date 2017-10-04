@@ -10,26 +10,25 @@
  * ========================================
 */
 
-#include <stdio.h>
 #include "motor.h"
 
-#define MOTOR_SPEED 3500
+#define MOTOR_SPEED 6000
 #define MOTOR_MIN_SPEED 3000
 #define MOTOR_MAX_SPEED 10000
-#define MOTOR_TURN_VALUE_360 17800
+#define MOTOR_TURN_VALUE_360 57300
 #define MOTOR_KP 10
-#define MOTOR_KI 1 //1
-#define MOTOR_KD 100
+#define MOTOR_KD 25
+#define MOTOR_KI 5
+
+int rightWheelDirection = 0;
+int leftWheelDirection = 0;
 
 int error;
 int prevError;
 int derivative;
 int integral;
 
-extern int rightWheelDirection;
-extern int leftWheelDirection;
-
-char motor_string[100];
+char string[100];
 
 void Motor_Start() {
     PWM_Right_Forward_Start();
@@ -39,6 +38,8 @@ void Motor_Start() {
     
     QuadDec_Right_Start();
     QuadDec_Left_Start();
+    
+    PID_Timer_Start();
 }
 
 void Motor_MoveForward() {
@@ -64,8 +65,8 @@ void Motor_MoveBackwards() {
 void Motor_TurnLeft(float degrees) {
     float angleTicks = MOTOR_TURN_VALUE_360*degrees/360;
     
-    PWM_Right_Forward_WriteCompare(3000);
-    PWM_Left_Reverse_WriteCompare(3000);
+    PWM_Right_Forward_WriteCompare(MOTOR_SPEED);
+    PWM_Left_Reverse_WriteCompare(MOTOR_SPEED);
     
     rightWheelDirection = 1;
     leftWheelDirection = -1;  
@@ -90,8 +91,8 @@ void Motor_TurnLeft(float degrees) {
 void Motor_TurnRight(float degrees) {
     float angleTicks = MOTOR_TURN_VALUE_360*degrees/360;
     
-    PWM_Right_Reverse_WriteCompare(3000);
-    PWM_Left_Forward_WriteCompare(3000);
+    PWM_Right_Reverse_WriteCompare(MOTOR_SPEED);
+    PWM_Left_Forward_WriteCompare(MOTOR_SPEED);
     
     rightWheelDirection = -1;
     leftWheelDirection = 1;
@@ -108,7 +109,6 @@ void Motor_TurnRight(float degrees) {
         if( QuadDec_Left_GetCounter() >= angleTicks ) {
             PWM_Left_Forward_WriteCompare(0);
             leftFinish = 1;
-            UART_PutString("Left Finished\n");
             leftWheelDirection = 0;
         }
     }
@@ -134,30 +134,30 @@ void Motor_PID_Reset() {
     QuadDec_Left_SetCounter(0);
 }
 
-void Motor_PID_Adjust(int rightDirection, int leftDirection) {
+void Motor_PID_Adjust() {
     
-    if(rightWheelDirection != 0 && leftWheelDirection != 0) {
+    if(rightWheelDirection != 0 || leftWheelDirection != 0) {
         int rightCompare = 0;
         int leftCompare = 0;
         float correction;
         
-        error = (rightDirection)*QuadDec_Right_GetCounter() - (leftDirection)*QuadDec_Left_GetCounter();
+        error = (rightWheelDirection)*QuadDec_Right_GetCounter() - (leftWheelDirection)*QuadDec_Left_GetCounter();
         derivative = error - prevError;
         integral += error;
 
         correction = MOTOR_KP*error + MOTOR_KI*integral + MOTOR_KD*derivative;
         
-        if( rightDirection > 0 ) {
+        if( rightWheelDirection > 0 ) {
             rightCompare = PWM_Right_Forward_ReadCompare();
         }
-        else if( rightDirection < 0 ) {
+        else if( rightWheelDirection < 0 ) {
             rightCompare = PWM_Right_Reverse_ReadCompare();
         }
         
-        if( leftDirection > 0 ) {    
+        if( leftWheelDirection > 0 ) {    
             leftCompare = PWM_Left_Forward_ReadCompare();
         }
-        else if( leftDirection < 0 ) {
+        else if( leftWheelDirection < 0 ) {
             leftCompare = PWM_Left_Reverse_ReadCompare();
         }
         
@@ -167,24 +167,30 @@ void Motor_PID_Adjust(int rightDirection, int leftDirection) {
         rightCompare = Motor_LimitCompare(rightCompare);
         leftCompare = Motor_LimitCompare(leftCompare);
         
-        if( rightDirection > 0 ) {
+        if( rightWheelDirection > 0 ) {
             PWM_Right_Forward_WriteCompare(rightCompare);
         }
-        else if( rightDirection < 0 ) {
+        else if( rightWheelDirection < 0 ) {
             PWM_Right_Reverse_WriteCompare(rightCompare);
         }
         
-        if( leftDirection > 0 ) {    
+        if( leftWheelDirection > 0 ) {    
             PWM_Left_Forward_WriteCompare(leftCompare);
         }
-        else if( leftDirection < 0 ) {
+        else if( leftWheelDirection < 0 ) {
             PWM_Left_Reverse_WriteCompare(leftCompare);
         }
         
         prevError = error;
         
-        //sprintf(motor_string, "Left:\t%d,\tRight:\t%d,\tError:\t%d,\tCorrection:\t%.2f\n", leftCompare, rightCompare, error, correction);      // Convert and store to string
-        //UART_PutString(motor_string); 
+//        sprintf(string, "KP:\t%d,\tKD:\t%d,\tKI:\t%d\n", KP, KD, KI);      // Convert and store to string
+//        UART_PutString(string); 
+//        
+//        sprintf(string, "Left:\t%d,\tRight:\t%d,\tError:\t%d,\tCorrection:\t%.2f\n", leftCompare, rightCompare, error, correction);      // Convert and store to string
+//        UART_PutString(string);
+//        
+//        sprintf(string, "Quad Left:\t%ld,\tQuad Right:\t%ld\n", QuadDec_Left_GetCounter(), QuadDec_Right_GetCounter());      // Convert and store to string
+//        UART_PutString(string); 
     }
 }
 
