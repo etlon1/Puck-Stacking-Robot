@@ -10,12 +10,17 @@
  * ========================================
 */
 
+#ifndef _SERVO_H_
+#define _SERVO_H_
+    
 #include "project.h"
-#include "motor.h"
-#include "ultrasonic.h"
-#include "vl53l0x_functions.h"
-#include "color.h"
 
-void run_task_3();
+void Servo_Start();
+void Servo_GripperGrab();
+void Servo_GripperRelease();
+void Servo_ArmMove(int puckNumber);
+void Servo_Stack(int puckNumber);
+
+#endif
 
 /* [] END OF FILE */

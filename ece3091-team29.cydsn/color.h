@@ -23,9 +23,9 @@ void Color_LED_TurnOff(int color);
 void Color_LED_TurnOnAll();
 void Color_LED_TurnOffAll();
 
-int _Color_GetSample();
-int _Color_GetMultipleSamples();
-int _Color_IsSampleGood(int red, int green, int blue, int color);
+int Color_GetSample();
+int Color_GetMultipleSamples();
+int Color_IsSampleGood(int red, int green, int blue, int color);
 
 #endif
 

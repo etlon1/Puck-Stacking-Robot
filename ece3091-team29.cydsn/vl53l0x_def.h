@@ -187,9 +187,6 @@ typedef uint8_t VL53L0X_DeviceModes;
 #define VL53L0X_DEVICEMODE_SINGLE_ALS		((VL53L0X_DeviceModes) 10)
 #define VL53L0X_DEVICEMODE_GPIO_DRIVE		((VL53L0X_DeviceModes) 20)
 #define VL53L0X_DEVICEMODE_GPIO_OSC		((VL53L0X_DeviceModes) 21)
-
-#define VL53L0X_DEFAULT_ACCURACY	((VL53L0X_DeviceModes)  0)
-#define VL53L0X_HIGH_ACCURACY	((VL53L0X_DeviceModes)  1)
 	/* ... Modes to be added depending on device */
 /** @} VL53L0X_define_DeviceModes_group */
 

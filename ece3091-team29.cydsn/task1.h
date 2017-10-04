@@ -15,6 +15,8 @@
 #include "ultrasonic.h"
 #include "vl53l0x_functions.h"
 
+#include <math.h>
+
 void run_task_1();
 
 /* [] END OF FILE */

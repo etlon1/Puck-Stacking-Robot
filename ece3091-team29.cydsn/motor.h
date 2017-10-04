@@ -13,6 +13,8 @@
 #ifndef _MOTOR_H_
 #define _MOTOR_H_
     
+#include <stdio.h>
+    
 #include "project.h"
 
 void Motor_Start();
@@ -25,7 +27,7 @@ void Motor_TurnLeft(float degrees);
 
 void Motor_Stop();
 
-void Motor_PID_Adjust(int rightDirection, int leftDirection);
+void Motor_PID_Adjust();
 void Motor_PID_Reset();
 
 int Motor_LimitCompare(int compare);

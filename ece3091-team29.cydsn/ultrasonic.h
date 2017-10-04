@@ -15,11 +15,10 @@
 
 #include "project.h"
 #include <stdio.h>
-    
-void Ultrasonic_CalculateDistance();
-void Ultrasonic_ReadDistance();
 
-int Ultrasonic_EchoFree();
+void Ultrasonic_Start();
+void Ultrasonic_CalculateDistance();
+float Ultrasonic_ReadDistance();
 
 #endif
 
